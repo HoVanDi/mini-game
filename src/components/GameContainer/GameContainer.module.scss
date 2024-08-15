@@ -1,0 +1,37 @@
+.wrapper {
+  padding: 20px;
+  border: 1px solid #000;
+  width: 400px;
+  margin: 0 auto;
+  border-radius: 4px;
+}
+
+.scoreboard {
+  margin-bottom: 10px;
+
+  .point,
+  .times {
+    display: flex;
+    max-height: 20px;
+    align-items: center;
+    margin-bottom: 10px;
+
+    input,
+    .timer {
+      margin-left: 80px;
+    }
+  }
+}
+
+.btn-restart {
+  cursor: pointer;
+  width: 100px;
+}
+
+.red {
+  color: red;
+}
+
+.green {
+  color: green;
+}
