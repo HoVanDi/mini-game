@@ -6,40 +6,31 @@ import styles from "./GameContainer.module.scss";
 const cx = classNames.bind(styles);
 
 const GameContainer = () => {
-  const [points, setPoints] = useState(3); // Start with 3 points
-  const [time, setTime] = useState(0); // Timer starts at 0
-  const [isPlaying, setIsPlaying] = useState(false); // Game state
-  const [gameStarted, setGameStarted] = useState(false); // Track if the game has started
+  const [points, setPoints] = useState(3);
+  const [time, setTime] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
   const [heading, setHeading] = useState("LET'S PLAY");
-  const [gameKey, setGameKey] = useState(0); // Key for triggering GameBoard re-render
+  const [gameKey, setGameKey] = useState(0);
 
   // Handle play/restart button click
   const handlePlayRestart = () => {
-    setIsPlaying(!isPlaying);
-    if (!gameStarted) {
-      setGameStarted(true); // Mark the game as started
-    }
     setIsPlaying(true);
+    setGameStarted(true);
     setTime(0);
     setHeading("LET'S PLAY");
-
-    // Increment gameKey to force GameBoard re-render with new positions
     setGameKey((prevKey) => prevKey + 1);
   };
 
-  // Handle point change
   const handlePointChange = (e) => {
     const newPoints = parseInt(e.target.value);
-
-    // Handle empty input or invalid number
     if (isNaN(newPoints)) {
-      setPoints(0); // Set to 0 or any default value you prefer
+      setPoints(0);
     } else {
       setPoints(newPoints);
     }
-
-    setTime(0); // Reset the timer when points change
-    setIsPlaying(false); // Stop the game to reset it
+    setTime(0);
+    setIsPlaying(false);
   };
 
   // Timer effect
@@ -47,17 +38,9 @@ const GameContainer = () => {
     let timer;
     if (isPlaying) {
       timer = setInterval(() => {
-        setTime((prevTime) => {
-          if (prevTime >= 6.6) {
-            setIsPlaying(false);
-            setHeading("GAME OVER");
-            return prevTime;
-          }
-          return prevTime + 0.1;
-        });
+        setTime((prevTime) => prevTime + 0.1);
       }, 100);
     }
-
     return () => clearInterval(timer);
   }, [isPlaying]);
 
@@ -67,7 +50,12 @@ const GameContainer = () => {
     setHeading("ALL CLEARED");
   };
 
-  // Determine the heading color based on the game state
+  // Handle game over
+  const handleGameOver = () => {
+    setIsPlaying(false);
+    setHeading("GAME OVER");
+  };
+
   const headingStyle = cx({
     red: heading === "GAME OVER",
     green: heading === "ALL CLEARED",
@@ -97,10 +85,11 @@ const GameContainer = () => {
       </div>
 
       <GameBoard
-        key={gameKey} // Use gameKey as the key prop to force re-render
+        key={gameKey}
         points={points}
         isPlaying={isPlaying}
         onAllCleared={handleAllCleared}
+        onGameOver={handleGameOver} // Pass the handleGameOver function here
       />
     </div>
   );
